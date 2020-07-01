@@ -1,13 +1,12 @@
 package com.datawheel.backend.service;
 
 import com.datawheel.backend.domain.Button;
+import com.datawheel.backend.pojo.Counter;
 import com.datawheel.backend.repository.ButtonRepository;
-import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -19,12 +18,16 @@ public class ButtonServiceImpl implements ButtonService {
     @Autowired
     private ButtonRepository buttonRepository;
 
+    @Autowired
+    private Counter counter;
+
     @Async
     @Override
-    public void saveCounterValue(int counter_value) {
-        Button button = new Button();
-        button.setButtonCounter(counter_value);
+    public void saveCounterValue(long counter_value) {
+        counter.getCounter_value().set(counter_value);
 
+        Button button = new Button();
+        button.setButtonCounter(counter.getCounter_value().get());
         String clickedTime = LocalDateTime.now().toString();
         button.setButtonClickedTime(clickedTime);
         Optional<Long> previousClickTimeAverage = buttonRepository.getPreviousClickTimeAverage();
@@ -46,27 +49,25 @@ public class ButtonServiceImpl implements ButtonService {
         LocalDateTime timeNow = LocalDateTime.now();
         Optional<String> lastClickTimeOptional = buttonRepository.getPreviousClickTime();
         LocalDateTime lastClickTime = null;
-        if(lastClickTimeOptional.isPresent()){
+        if (lastClickTimeOptional.isPresent()) {
             lastClickTime = LocalDateTime.parse(lastClickTimeOptional.get());
-        }else{
+        } else {
             return 0;
         }
         long clickTimeDifferent = lastClickTime.until(timeNow, ChronoUnit.SECONDS);
-
-
-        return  (previousClickTimeAverage + clickTimeDifferent)/2;
+        return (previousClickTimeAverage + clickTimeDifferent) / 2;
     }
 
     @Override
-    public int getRecentCounterValue() {
-        Optional<Integer> counterValue = buttonRepository.getRecentCounterValue();
+    public long getRecentCounterValue() {
+        Optional<Long> counterValue = buttonRepository.getRecentCounterValue();
         if (counterValue.isPresent())
             return counterValue.get();
         return 0;
     }
 
     @Override
-    public int countFromZero() {
+    public long countFromZero() {
         buttonRepository.countFromZero();
         return 0;
     }
@@ -74,7 +75,7 @@ public class ButtonServiceImpl implements ButtonService {
     @Override
     public long getAverageTimeClick() {
         Optional<Long> average_time_click_optional = buttonRepository.getPreviousClickTimeAverage();
-        if(average_time_click_optional.isPresent())
+        if (average_time_click_optional.isPresent())
             return average_time_click_optional.get();
         return 0;
     }

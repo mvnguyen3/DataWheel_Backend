@@ -1,11 +1,11 @@
 package com.datawheel.backend.service;
 
 public interface ButtonService {
-    void saveCounterValue(int counter_value);
+    void saveCounterValue(long counter_value);
 
-    int getRecentCounterValue();
+    long getRecentCounterValue();
 
-    int countFromZero();
+    long countFromZero();
 
     long getAverageTimeClick();
 }

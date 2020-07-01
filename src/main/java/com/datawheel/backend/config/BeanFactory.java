@@ -1,5 +1,6 @@
 package com.datawheel.backend.config;
 
+import com.datawheel.backend.pojo.Counter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -8,8 +9,8 @@ import org.springframework.web.client.RestTemplate;
 public class BeanFactory {
 
     @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
+    public Counter counter() {
+        return Counter.getINSTANCE();
     }
 
 }

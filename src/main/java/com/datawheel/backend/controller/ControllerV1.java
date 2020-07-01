@@ -30,7 +30,7 @@ public class ControllerV1 {
 
     @MessageMapping("/increment")
     @SendTo("/topic/incremented")
-    public ResponseEntity<?> increment(@RequestParam("counter") int counter_value) {
+    public ResponseEntity<?> increment(@RequestParam("counter") long counter_value) {
         Map<String, Object> response = new HashMap<>();
         buttonService.saveCounterValue(counter_value);
         response.put("counter_value", counter_value);
@@ -40,18 +40,27 @@ public class ControllerV1 {
     @GetMapping(value = "/getCounterValue", produces = "application/json")
     public ResponseEntity<?> getCounterValue() {
         Map<String, Object> response = new HashMap<>();
-        int counter_value = buttonService.getRecentCounterValue();
+        long counter_value = buttonService.getRecentCounterValue();
         response.put("counter_value", counter_value);
         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/countFromZero", produces = "application/json")
+    @MessageMapping("/countFromZero")
+    @SendTo("/topic/countFromZero")
     public ResponseEntity<?> countFromZero() {
         Map<String, Object> response = new HashMap<>();
-        int counter_value = buttonService.countFromZero();
+        long counter_value = buttonService.countFromZero();
         response.put("counter_value", counter_value);
         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
     }
+
+//    @DeleteMapping(value = "/countFromZero", produces = "application/json")
+//    public ResponseEntity<?> countFromZero() {
+//        Map<String, Object> response = new HashMap<>();
+//        long counter_value = buttonService.countFromZero();
+//        response.put("counter_value", counter_value);
+//        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
+//    }
 
     @GetMapping(value = "/getAverageTime", produces = "application/json")
     public ResponseEntity<?> getAverageTime() {

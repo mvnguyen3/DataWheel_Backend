@@ -1,20 +1,24 @@
 package com.datawheel.backend.domain;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+
+// Make this class singleton and having an atomic long as a button counter;
 @Entity
 @Table(name = "Button")
 @Data
-@NoArgsConstructor
-public class Button{
+public class Button {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private int buttonCounter;
+    private long buttonCounter;
     private String buttonClickedTime;
     private long buttonClickTimeAverageInSecond;
+
+    public Button() {
+    }
+
 }

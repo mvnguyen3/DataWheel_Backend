@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface ButtonRepository extends JpaRepository<Button, Long> {
     @Query(value = "SELECT button_counter FROM button where id = (SELECT max(id) FROM button)", nativeQuery = true)
-    Optional<Integer> getRecentCounterValue();
+    Optional<Long> getRecentCounterValue();
 
     @Query(value = "TRUNCATE table button", nativeQuery = true)
     @Modifying
