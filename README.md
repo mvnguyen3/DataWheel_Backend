@@ -14,7 +14,8 @@ Step to run this application:
   4. Install postgresql database.
     a. You can download postgresql through postgresql website.
     b. REMEMBER to set the password as Cps38102991 for postgresql database. You can leave the username by default.
-    c. Download link: https://www.postgresql.org/
+    c. Create database named datawheeldb by using pgAdmin4.
+    d. Download link: https://www.postgresql.org/
   5. Run the project using CLI
     a. Route to your project location using command line.
     b. Type this command to run the project: mvn spring-boot:run
