@@ -1,5 +1,8 @@
 package com.datawheel.backend.controller;
 
+import com.datawheel.backend.domain.Button;
+import com.datawheel.backend.pojo.ClickRate;
+import com.datawheel.backend.service.AverageClickTimeOption;
 import com.datawheel.backend.service.ButtonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -67,30 +71,47 @@ public class ControllerV1 {
         Map<String, Object> response = new HashMap<>();
         long average_time_click = buttonService.getAverageTimeClick();
         response.put("average_time_click", average_time_click);
-        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @GetMapping(value="/getAverageClick", produces = "application/json")
+    public ResponseEntity<?> getAverageClick(){
+        Map<String, Object> response = new HashMap<>();
+        int click_rate = buttonService.getClickRate(AverageClickTimeOption.IN_30_SECOND);
+        long average_click = buttonService.getAverageClick(click_rate);
+        response.put("average_click", average_click);
+        response.put("click_rate", click_rate);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/getAllClick", produces = "application/json")
+    public ResponseEntity<?> getAllClick(){
+        Map<String, Object> response = new HashMap<>();
+        List<Button> buttonList = buttonService.getAllClicksDESC();
+        List<ClickRate> clickRateList = buttonService.buildClickRateList(buttonList);
+
+        response.put("click_rate_list", clickRateList);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 
 
     private LocalDateTime previousTime = null;
 
     @GetMapping("/testTime")
-    public ResponseEntity<?> testTime() {
+    public ResponseEntity<?> testTime() throws InterruptedException {
         Map<String, Object> response = new HashMap<>();
         LocalDateTime timeNow = LocalDateTime.now();
-        System.out.println(timeNow.toString());
-        System.out.println(timeNow.getSecond());
-        if (previousTime != null) {
-            long seconds = previousTime.until(timeNow, ChronoUnit.SECONDS);
-            System.out.println("Different in seconds: " + seconds);
-        }
+        Thread.sleep(2000);
+        LocalDateTime timeNow2 = LocalDateTime.now();
+        System.out.println(timeNow.until(timeNow2, ChronoUnit.SECONDS));
+        System.out.println(timeNow2.until(timeNow, ChronoUnit.SECONDS));
 
-        previousTime = timeNow;
 
-        String timeNowString = timeNow.toString();
-        LocalDateTime dateTime = LocalDateTime.parse(timeNowString);
-        System.out.println("formatted: " + dateTime);
 
         response.put("status", "Success");
         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
     }
+
+
 }

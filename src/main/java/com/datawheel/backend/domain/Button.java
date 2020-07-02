@@ -17,6 +17,7 @@ public class Button {
     private long buttonCounter;
     private String buttonClickedTime;
     private long buttonClickTimeAverageInSecond;
+    private long buttonClickTimeDifferentInSecond;
 
     public Button() {
     }
