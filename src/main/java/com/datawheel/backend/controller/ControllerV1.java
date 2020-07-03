@@ -94,24 +94,4 @@ public class ControllerV1 {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-
-
-    private LocalDateTime previousTime = null;
-
-    @GetMapping("/testTime")
-    public ResponseEntity<?> testTime() throws InterruptedException {
-        Map<String, Object> response = new HashMap<>();
-        LocalDateTime timeNow = LocalDateTime.now();
-        Thread.sleep(2000);
-        LocalDateTime timeNow2 = LocalDateTime.now();
-        System.out.println(timeNow.until(timeNow2, ChronoUnit.SECONDS));
-        System.out.println(timeNow2.until(timeNow, ChronoUnit.SECONDS));
-
-
-
-        response.put("status", "Success");
-        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
-    }
-
-
 }
